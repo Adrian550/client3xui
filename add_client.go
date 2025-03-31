@@ -45,6 +45,7 @@ type XrayClient struct {
 	Enable     bool   `json:"enable"`
 	TgID       uint   `json:"tgId"`
 	SubID      string `json:"subId"`
+	Flow       string `json:"flow"`
 }
 
 // Add client to an inbound.
