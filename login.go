@@ -61,7 +61,7 @@ func (c *Client) login(ctx context.Context) error {
 		if cookie.Name == "3x-ui" {
 			c.sessionMu.Lock()
 			c.sessionCookie = cookie
-			c.sessionExpires = cookie.Expires.Add(-6 * time.Hour)
+			c.sessionExpires = cookie.Expires.Add(-45 * time.Minute)
 			c.sessionMu.Unlock()
 		}
 	}
