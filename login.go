@@ -59,11 +59,15 @@ func (c *Client) login(ctx context.Context) error {
 	}
 	for _, cookie := range resp.Cookies() {
 		if cookie.Name == "3x-ui" {
+			c.sessionMu.Lock()
 			c.sessionCookie = cookie
 			c.sessionExpires = cookie.Expires.Add(-6 * time.Hour)
+			c.sessionMu.Unlock()
 		}
 	}
 
+	c.sessionMu.Lock()
+	defer c.sessionMu.Unlock()
 	if c.sessionCookie != nil {
 		return nil
 	}
@@ -72,7 +76,10 @@ func (c *Client) login(ctx context.Context) error {
 }
 
 func (c *Client) loginIfNoCookie(ctx context.Context) error {
-	if c.sessionCookie != nil && c.sessionExpires.After(time.Now()) {
+	c.sessionMu.Lock()
+	valid := c.sessionCookie != nil && c.sessionExpires.After(time.Now())
+	c.sessionMu.Unlock()
+	if valid {
 		return nil
 	}
 	return c.login(ctx)

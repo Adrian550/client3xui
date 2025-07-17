@@ -41,7 +41,9 @@ func (c *Client) Do(ctx context.Context, method, path string, in, out interface{
 	if err != nil {
 		return err
 	}
+	c.sessionMu.Lock()
 	req.AddCookie(c.sessionCookie)
+	c.sessionMu.Unlock()
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
@@ -67,7 +69,9 @@ func (c *Client) DoRaw(ctx context.Context, method, baseurl, path, contentType s
 	if err != nil {
 		return nil, err
 	}
+	c.sessionMu.Lock()
 	req.AddCookie(c.sessionCookie)
+	c.sessionMu.Unlock()
 	req.Header.Set("Content-Type", contentType)
 	if c.host != "" {
 		req.Host = c.host
@@ -92,7 +96,9 @@ func (c *Client) DoForm(ctx context.Context, method, path string, form url.Value
 	if err != nil {
 		return err
 	}
+	c.sessionMu.Lock()
 	req.AddCookie(c.sessionCookie)
+	c.sessionMu.Unlock()
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	resp, err := c.httpClient.Do(req)
 	if err != nil {

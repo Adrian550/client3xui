@@ -18,6 +18,7 @@ package client3xui
 
 import (
 	"net/http"
+	"sync"
 	"time"
 )
 
@@ -27,6 +28,7 @@ type Client struct {
 	httpClient         *http.Client
 	sessionCookie      *http.Cookie
 	sessionExpires     time.Time
+	sessionMu          sync.Mutex
 }
 
 func New(c Config) *Client {
